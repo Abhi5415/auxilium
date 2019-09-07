@@ -3,53 +3,68 @@ const router = express.Router();
 
 const { Borrower } = require("../../models/Borrower");
 
-router.get("/test", (req, res) => res.json({ message: "Borrowers works" }));
+router.get("/test", (_req, res) => res.json({ message: "Borrowers works" }));
 
-router.get("/", async (req, res) => {
-  const borrowers = Borrower.find();
-  res.json(borrowers);
+router.get("/", async (_req, res) => {
+  const borrowers = await Borrower.find();
+  return res.json(borrowers);
 });
 
-router.post("/isRegistered", (req, res) => {
-  const { phoneNumber } = req;
+router.post("/isRegistered", async (req, res) => {
+  const { phoneNumber } = req.body;
 
-  Borrower.find({ phoneNumber }).then(borrower => {
-    if (!borrower) {
-      return res.status(404).json({ message: "borrower not found" });
-    }
-    return res.json({ firstName: borrower.firstName });
-  });
+  const borrower = await Borrower.findOne({ phoneNumber });
+
+  if (!borrower) {
+    return res.status(404).json({ message: "borrower not found" });
+  }
+
+  return res.json({ firstName: borrower.firstName });
 });
 
-router.post("/authVerify", (req, res) => {
-  const { phoneNumber, securePin } = req;
+router.post("/authVerify", async (req, res) => {
+  const { phoneNumber, securePin } = req.body;
 
-  Borrower.find({ phoneNumber }).then(borrower => {
-    if (!borrower) {
-      return res.status(404).json({ message: "borrower not found" });
-    }
-    if (borrower.emergencyPin === securePin) {
-      return res.json({ message: "calling the popo" });
-    }
-    if (borrower.pin !== securePin) {
-      return res.status(404).json({ message: "incorrect pin" });
-    }
-    return res.status(200);
-  });
+  const borrower = await Borrower.findOne({ phoneNumber });
+
+  if (!borrower) {
+    return res.status(404);
+  }
+  if (borrower.emergencyPin === securePin) {
+    return res.status(500);
+  }
+  if (borrower.pin !== securePin) {
+    return res.status(404);
+  }
+
+  return res.sendStatus(200);
 });
 
 router.post("/deposit", (req, res) => {
-  const { phoneNumber } = req;
+  const { phoneNumber } = req.body;
 
-  console.log("depositing.....");
-  return res.status(200);
+  return res.sendStatus(200);
+});
+
+router.post("/withdrawLimit", async (req, res) => {
+  const { phoneNumber } = req.body;
+
+  const borrower = await Borrower.findOne({ phoneNumber });
+
+  if (!borrower) {
+    return res.status(404);
+  }
+
+  // const widthdrawLimit =
+  //   borrower.maxAvailableCredit - creditForUserTransactions;
+
+  return res.json({ widthdrawLimit: 5 });
 });
 
 router.post("/withdraw", (req, res) => {
-  const { phoneNumber } = req;
+  const { phoneNumber, withdrawAmount } = req.body;
 
-  console.log("withdrawing...");
-  return res.status(200);
+  return res.sendStatus(200);
 });
 
 module.exports = router;
