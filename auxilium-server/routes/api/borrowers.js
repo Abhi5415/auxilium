@@ -18,12 +18,14 @@ router.get("/", async (_req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  req.body.imageURI = req.body.imageURI || "";
+  req.body.imageURI =
+    req.body.imageURI ||
+    "https://jwhitephoto.com/wp-content/uploads/2017/11/metro-detroit-birmingham-headshot-photographer-jeff-white-jwhitephoto-11-725x1024.jpg";
 
   const borrowerCount = await Borrower.count();
   const borrower = new Borrower({
     ...req.body,
-    stellarId: borrowerCount - 1
+    stellarId: borrowerCount
   });
 
   try {
