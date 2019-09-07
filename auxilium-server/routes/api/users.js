@@ -18,7 +18,7 @@ router.post("/register", (req, res) => {
     emergency_pin: emergencyPin
   } = req;
 
-  const user = new User({ ...req });
+  const user = new User({ name, phoneNumber, pin, emergencyPin });
   user
     .save()
     .then(user => res.json(user))
