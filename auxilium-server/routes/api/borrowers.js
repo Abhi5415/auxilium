@@ -12,6 +12,7 @@ router.get("/", async (req, res) => {
 
 router.post("/isRegistered", (req, res) => {
   const { phoneNumber } = req;
+  console.log("isRegistered", phoneNumber);
 
   Borrower.find({ phoneNumber }).then(borrower => {
     if (!borrower) {
@@ -23,6 +24,7 @@ router.post("/isRegistered", (req, res) => {
 
 router.post("/authVerify", (req, res) => {
   const { phoneNumber, securePin } = req;
+  console.log("authverify", phoneNumber, securePin);
 
   Borrower.find({ phoneNumber }).then(borrower => {
     if (!borrower) {
@@ -50,6 +52,20 @@ router.post("/withdraw", (req, res) => {
 
   console.log("withdrawing...");
   return res.status(200);
+});
+
+router.post("/stellarReturn", (req, res) => {
+  const { obj } = req.body;
+
+  obj.forEach((elem) => {
+    elem = elem.stellarid;
+    Borrower.find({ elem }).then(found => {
+      if (!found) {
+        return res.status(404).json({ message: "borrower associated with this stellarID not found" });
+      }
+      return res.json({ found });
+    });
+  });
 });
 
 module.exports = router;
