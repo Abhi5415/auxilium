@@ -19,7 +19,8 @@ const ButtonContainer = styled(Button)`
 
 export class Borrowers extends React.Component {
   state = {
-    visible: false
+    visible: false,
+    data: []
   };
 
   showModal = () => {
@@ -30,20 +31,35 @@ export class Borrowers extends React.Component {
     this.setState({ visible: false });
   };
 
+  componentDidMount() {
+    this.fetchAll();
+  }
+
+  fetchAll = async () => {
+    const data = await (await fetch("http://localhost:5000/borrowers/all", {
+      method: "GET"
+    })).json();
+    this.setState({
+      data
+    });
+  };
+
   handleCreate = () => {
     const { form } = this.formRef.props;
-    form.validateFields((err, values) => {
+    form.validateFields(async (err, values) => {
       if (err) {
         return;
       }
 
-      fetch("http://localhost:5000/borrowers/register", {
+      await fetch("http://localhost:5000/borrowers/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify(values)
       });
+
+      this.fetchAll();
 
       form.resetFields();
       this.setState({ visible: false });
@@ -73,7 +89,7 @@ export class Borrowers extends React.Component {
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
         />
-        <TransactionTable />
+        <TransactionTable data={this.state.data} />
       </React.Fragment>
     );
   }

@@ -57,6 +57,8 @@ const data = [
 
 export class TransactionTable extends React.Component {
   render() {
-    return <Table columns={columns} dataSource={data} size="small" />;
+    return (
+      <Table columns={columns} dataSource={this.props.data} size="small" />
+    );
   }
 }
