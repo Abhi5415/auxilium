@@ -1,64 +1,65 @@
 import React from "react";
 import { Table } from "antd";
-
-const columns = [
-  {
-    title: "First Name",
-    dataIndex: "firstName"
-  },
-  {
-    title: "Last Name",
-    dataIndex: "lastName"
-  },
-  {
-    title: "Phone Number",
-    dataIndex: "phoneNumber"
-  },
-  {
-    title: "Maximum available credit",
-    dataIndex: "maxAvailableCredit"
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (text, record) => {
-      console.log(text, record);
-      return (
-        <span>
-          <a>View</a>
-        </span>
-      );
-    }
-  }
-];
-const data = [
-  {
-    key: "1",
-    firstName: "John",
-    lastName: "Brown",
-    phoneNumber: "+16479634142",
-    maxAvailableCredit: "5"
-  },
-  {
-    key: "2",
-    firstName: "Jim",
-    lastName: "Green",
-    phoneNumber: "+18310837291",
-    maxAvailableCredit: "2"
-  },
-  {
-    key: "3",
-    firstName: "George",
-    lastName: "Black",
-    phoneNumber: "+12490839283",
-    maxAvailableCredit: "3"
-  }
-];
+import { UserDetailModal } from "../modals/UserDetailModal";
 
 export class TransactionTable extends React.Component {
+  state = {
+    data: undefined
+  };
+
+  columns = [
+    {
+      title: "First Name",
+      dataIndex: "firstName"
+    },
+    {
+      title: "Last Name",
+      dataIndex: "lastName"
+    },
+    {
+      title: "Phone Number",
+      dataIndex: "phoneNumber"
+    },
+    {
+      title: "Maximum available credit",
+      dataIndex: "maxAvailableCredit"
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (text, record) => {
+        return (
+          <span
+            onClick={() => {
+              this.setState({
+                data: record
+              });
+            }}
+          >
+            <a>View</a>
+          </span>
+        );
+      }
+    }
+  ];
+
   render() {
     return (
-      <Table columns={columns} dataSource={this.props.data} size="small" />
+      <React.Fragment>
+        {(this.state.data || null) && (
+          <UserDetailModal
+            data={this.state.data || {}}
+            onOk={() => this.setState({ data: undefined })}
+            onCancel={() => this.setState({ data: undefined })}
+            callbackUpdate={() => this.props.callbackUpdate()}
+          />
+        )}
+        <Table
+          columns={this.columns}
+          dataSource={this.props.data}
+          size="small"
+        />
+      </React.Fragment>
     );
   }
 }

@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { Button, Typography } from "antd";
 import { TransactionTable } from "../transactions/TransactionTable";
 import { AddUserModal } from "../modals/AddUserModal";
-import { UserDetailModal } from "../modals/UserDetailModal";
 
 const { Title } = Typography;
 
@@ -82,14 +81,16 @@ export class Borrowers extends React.Component {
             onClick={this.showModal}
           />
         </HeaderContainer>
-        {/* <UserDetailModal /> */}
         <AddUserModal
           wrappedComponentRef={this.saveFormRef}
           visible={this.state.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
         />
-        <TransactionTable data={this.state.data} />
+        <TransactionTable
+          callbackUpdate={() => this.fetchAll()}
+          data={this.state.data}
+        />
       </React.Fragment>
     );
   }

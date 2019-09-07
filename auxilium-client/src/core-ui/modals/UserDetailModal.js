@@ -1,24 +1,47 @@
 import React from "react";
-import { Modal, Typography } from "antd";
+import { Modal, Typography, InputNumber } from "antd";
 
 const { Title } = Typography;
 
 export class UserDetailModal extends React.Component {
   render() {
+    const {
+      data: { firstName, lastName, phoneNumber, maxAvailableCredit },
+      onOk,
+      onCancel
+    } = this.props;
+
     return (
       <Modal
         title="Borrower Information"
         visible
-        onOk={() => console.log("ok")}
-        onCancel={() => console.log("cancelling")}
+        onOk={onOk}
+        onCancel={onCancel}
       >
-        <div style={{ display: "flex" }}>
-          <img
-            src="https://res.cloudinary.com/dmvxreauf/image/upload/v1556513572/smaller_icap8f.jpg"
-            width="200px"
-          />
+        <div>
+          <Title level={4}>
+            {firstName} {lastName}
+          </Title>
+          <p>{phoneNumber}</p>
           <div>
-            <Title level={4}>Shehryar Assad</Title>
+            Maximum available credit:
+            <InputNumber
+              style={{ marginLeft: 5 }}
+              defaultValue={maxAvailableCredit}
+              onChange={num => {
+                fetch("http://localhost:5000/borrowers/changeMaximumValue", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                    id: this.props.data._id,
+                    maximumValue: num
+                  })
+                });
+                this.props.callbackUpdate();
+              }}
+            />
           </div>
         </div>
       </Modal>
