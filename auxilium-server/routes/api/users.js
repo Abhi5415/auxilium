@@ -10,17 +10,19 @@ router.get("/", async (req, res) => {
   res.json(users);
 });
 
-router.post('/register', (req, res) => {
-  const { 
+router.post("/register", (req, res) => {
+  const {
     name,
     phone_number: phoneNumber,
     pin,
-    emergency_pin: emergencyPin,
+    emergency_pin: emergencyPin
   } = req;
 
-  const user = new User({ name, phoneNumber, pin, emergencyPin });
-  user.save().then(user => res.json(user))
-      .catch(err => res.status(200).json(err));
-})
+  const user = new User({ ...req });
+  user
+    .save()
+    .then(user => res.json(user))
+    .catch(err => res.status(200).json(err));
+});
 
 module.exports = router;
