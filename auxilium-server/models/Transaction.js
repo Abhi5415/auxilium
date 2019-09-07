@@ -21,11 +21,11 @@ const TransactionSchema = new Schema({
   },
   initiatedId: {
     type: Schema.Types.ObjectId,
-    ref: "transactions"
+    ref: "users"
   },
   destinationId: {
     type: Schema.Types.ObjectId,
-    ref: "transactions"
+    ref: "users"
   },
   dateCreated: {
     type: Date,
