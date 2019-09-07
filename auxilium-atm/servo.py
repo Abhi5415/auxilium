@@ -9,6 +9,10 @@ GPIO.setup(servoPIN, GPIO.OUT)
 p = GPIO.PWM(servoPIN, 50)
 p.start(2.5)
 
+f = open("withdraw.txt", "w+")
+f.write("pending")
+f.close()
+
 rotations = 0
 
 if len(sys.argv) > 1:
@@ -21,6 +25,10 @@ try:
 
      p.ChangeDutyCycle(2.5)
      time.sleep(0.5)
+
+  f = open("withdraw.txt", "w+")
+  f.write("done")
+  f.close()
 
 except KeyboardInterrupt:
   p.stop()
