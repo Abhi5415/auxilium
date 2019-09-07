@@ -15,6 +15,10 @@ const TransactionSchema = new Schema({
     type: Number,
     required: true
   },
+  atmId: {
+    type: String,
+    required: true
+  },
   destinationId: {
     type: Schema.Types.ObjectId,
     ref: "transactions"
