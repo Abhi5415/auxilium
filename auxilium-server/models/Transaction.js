@@ -19,6 +19,10 @@ const TransactionSchema = new Schema({
     type: String,
     required: true
   },
+  initiatedId: {
+    type: Schema.Types.ObjectId,
+    ref: "transactions"
+  },
   destinationId: {
     type: Schema.Types.ObjectId,
     ref: "transactions"
