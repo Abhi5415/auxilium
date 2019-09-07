@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
   res.json(borrowers);
 });
 
-router.post("/borrowerRegistered", (req, res) => {
+router.post("/isRegistered", (req, res) => {
   const { phoneNumber } = req;
 
   Borrower.find({ phoneNumber }).then(borrower => {
@@ -21,7 +21,7 @@ router.post("/borrowerRegistered", (req, res) => {
   });
 });
 
-router.post("/borrowerAuthVerify", (req, res) => {
+router.post("/authVerify", (req, res) => {
   const { phoneNumber, securePin } = req;
 
   Borrower.find({ phoneNumber }).then(borrower => {
@@ -38,14 +38,14 @@ router.post("/borrowerAuthVerify", (req, res) => {
   });
 });
 
-router.post("/borrowerDeposit", (req, res) => {
+router.post("/deposit", (req, res) => {
   const { phoneNumber } = req;
 
   console.log("depositing.....");
   return res.status(200);
 });
 
-router.post("/borrowerWithdrawal", (req, res) => {
+router.post("/withdraw", (req, res) => {
   const { phoneNumber } = req;
 
   console.log("withdrawing...");
