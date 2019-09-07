@@ -37,7 +37,14 @@ export class Borrowers extends React.Component {
         return;
       }
 
-      console.log("Received values of form: ", values);
+      fetch("http://localhost:5000/borrowers/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(values)
+      });
+
       form.resetFields();
       this.setState({ visible: false });
     });
@@ -59,7 +66,7 @@ export class Borrowers extends React.Component {
             onClick={this.showModal}
           />
         </HeaderContainer>
-        <UserDetailModal />
+        {/* <UserDetailModal /> */}
         <AddUserModal
           wrappedComponentRef={this.saveFormRef}
           visible={this.state.visible}

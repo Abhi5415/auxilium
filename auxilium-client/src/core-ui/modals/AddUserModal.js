@@ -76,7 +76,7 @@ export const AddUserModal = Form.create({ name: "form_in_modal" })(
               </Form.Item>
             </PinContainer>
             <Form.Item label="Headshot">
-              {getFieldDecorator("image")(
+              {getFieldDecorator("imageURI")(
                 <Dragger
                   name="file"
                   action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
