@@ -46,7 +46,7 @@ export class TransactionTable extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {(this.state.data || null) && (
+        {this.state.data && (
           <UserDetailModal
             data={this.state.data || {}}
             onOk={() => this.setState({ data: undefined })}

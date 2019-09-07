@@ -1,12 +1,20 @@
 import React from "react";
-import { Layout, Menu, Breadcrumb, Icon } from "antd";
-import { TransactionTable } from "../transactions/TransactionTable";
+import { Layout, Menu, Icon } from "antd";
+import styled from "styled-components";
+import { Borrowers } from "../borrowers/Borrowers";
+import { Dashboard } from "../dashboard/Dashboard";
+import { Settings } from "../settings/Settings";
 
 const { Header, Content, Footer, Sider } = Layout;
 
+const Container = styled.div`
+  margin: 10px;
+`;
+
 export class Sidebar extends React.Component {
   state = {
-    collapsed: false
+    collapsed: false,
+    chosenIndex: 0
   };
 
   onCollapse = collapsed => {
@@ -23,16 +31,25 @@ export class Sidebar extends React.Component {
           onCollapse={this.onCollapse}
         >
           <div className="logo" />
-          <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-            <Menu.Item key="1">
+          <Menu theme="dark" defaultSelectedKeys={["0"]} mode="inline">
+            <Menu.Item
+              key="0"
+              onClick={() => this.setState({ chosenIndex: 0 })}
+            >
               <Icon type="dashboard" />
               <span>Dashboard</span>
             </Menu.Item>
-            <Menu.Item key="2">
+            <Menu.Item
+              key="1"
+              onClick={() => this.setState({ chosenIndex: 1 })}
+            >
               <Icon type="book" />
               <span>Borrowers</span>
             </Menu.Item>
-            <Menu.Item key="9">
+            <Menu.Item
+              key="2"
+              onClick={() => this.setState({ chosenIndex: 2 })}
+            >
               <Icon type="setting" />
               <span>Settings</span>
             </Menu.Item>
@@ -45,7 +62,10 @@ export class Sidebar extends React.Component {
             backgroundColor: "white"
           }}
         >
-          {this.props.children}
+          <Container>
+            {(this.state.chosenIndex === 0 && <Dashboard />) ||
+              (this.state.chosenIndex === 1 && <Borrowers />) || <Settings />}
+          </Container>
           <Footer style={{ textAlign: "center" }}>Auxilium</Footer>
         </Layout>
       </Layout>

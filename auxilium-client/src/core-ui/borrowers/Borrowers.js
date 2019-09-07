@@ -41,6 +41,7 @@ export class Borrowers extends React.Component {
     this.setState({
       data
     });
+    this.forceUpdate();
   };
 
   handleCreate = () => {
