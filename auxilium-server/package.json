@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server",
+    "start": "concurrently \"nodemon server\" \"npm run tunnel\"",
     "tunnel": "ssh -R intus.serveo.net:80:localhost:5000 serveo.net"
   },
   "author": "",
@@ -16,6 +16,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
+    "concurrently": "^4.1.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jpv": "^2.0.1",
