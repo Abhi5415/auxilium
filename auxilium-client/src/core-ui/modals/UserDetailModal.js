@@ -26,7 +26,7 @@ export class UserDetailModal extends React.Component {
     {
       title: "Date",
       dataIndex: "date",
-      render: date => <span>{moment(date).format("MMMM DD, YYYY")}</span>
+      render: date => <span>{moment(date).format("MMMM DD, YYYY HH:MM")}</span>
     }
   ];
 
@@ -94,11 +94,9 @@ export class UserDetailModal extends React.Component {
               />
             </div>
             <div>
-              {
-                <Tag color={this.state.balance < 0 ? "volcano" : "green"}>
-                  {this.state.balance}
-                </Tag>
-              }
+              <Tag color={this.state.balance < 0 ? "volcano" : "green"}>
+                {this.state.balance}
+              </Tag>
             </div>
           </div>
         </div>

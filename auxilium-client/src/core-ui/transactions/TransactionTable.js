@@ -1,6 +1,7 @@
 import React from "react";
 import { Table } from "antd";
 import { UserDetailModal } from "../modals/UserDetailModal";
+import DeepLink from "../../stores/DeepLink";
 
 export class TransactionTable extends React.Component {
   state = {
@@ -25,6 +26,10 @@ export class TransactionTable extends React.Component {
       dataIndex: "maxAvailableCredit"
     },
     {
+      title: "ID",
+      dataIndex: "_id"
+    },
+    {
       title: "Action",
       key: "action",
       render: (text, record) => {
@@ -43,6 +48,17 @@ export class TransactionTable extends React.Component {
     }
   ];
 
+  componentWillReceiveProps(oldProps, newProps) {
+    this.props.data.forEach(row => {
+      console.log(row);
+      if (row._id == DeepLink.idChosen) {
+        this.setState({
+          data: row
+        });
+      }
+    });
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -50,7 +66,10 @@ export class TransactionTable extends React.Component {
           <UserDetailModal
             data={this.state.data || {}}
             onOk={() => this.setState({ data: undefined })}
-            onCancel={() => this.setState({ data: undefined })}
+            onCancel={() => {
+              this.setState({ data: undefined });
+              DeepLink.idChosen = undefined;
+            }}
             callbackUpdate={() => this.props.callbackUpdate()}
           />
         )}
