@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Button, Typography } from "antd";
 import { TransactionTable } from "../transactions/TransactionTable";
 import { AddUserModal } from "../modals/AddUserModal";
+import { UserDetailModal } from "../modals/UserDetailModal";
 
 const { Title } = Typography;
 
@@ -18,7 +19,7 @@ const ButtonContainer = styled(Button)`
 
 export class Borrowers extends React.Component {
   state = {
-    visible: true
+    visible: false
   };
 
   showModal = () => {
@@ -58,6 +59,7 @@ export class Borrowers extends React.Component {
             onClick={this.showModal}
           />
         </HeaderContainer>
+        <UserDetailModal />
         <AddUserModal
           wrappedComponentRef={this.saveFormRef}
           visible={this.state.visible}
