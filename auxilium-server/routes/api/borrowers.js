@@ -17,6 +17,32 @@ router.get("/", async (_req, res) => {
   return res.json(borrowers);
 });
 
+router.post("/register", async (req, res) => {
+  req.body.imageURI = req.body.imageURI || "";
+
+  const borrowerCount = await Borrower.count();
+  const borrower = new Borrower({
+    ...req.body,
+    stellarId: borrowerCount - 1
+  });
+
+  try {
+    const result = await borrower.save();
+    return res.json(result);
+  } catch (e) {
+    return res.status(500).json(e);
+  }
+});
+
+router.get("/all", async (req, res) => {
+  try {
+    const borrowers = await Borrower.find();
+    return res.json(borrowers);
+  } catch (e) {
+    return res.sendStatus(500);
+  }
+});
+
 router.post("/isRegistered", async (req, res) => {
   const { phoneNumber } = req.body;
 
@@ -99,7 +125,7 @@ router.post("/stellarReturn", async (req, res) => {
 
   console.log(stellarTransactions);
 
-  stellarTransactions.forEach(transaction => {
+  stellarTransactions.forEach(async transaction => {
     const stellarId = transaction.u;
 
     const borrower = await Borrower.findOne({ stellarId });
