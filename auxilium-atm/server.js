@@ -26,7 +26,15 @@ app.get('/api/atm/deposit', (req, res) => {
 
 app.post('/api/atm/withdraw', (req, res) => {
 	shell.exec(`python ir_sensor.py ${req.body.amount}`);
-	res.status(202).send();
+
+	fs.readFile('./withdraw.txt', 'utf8', (err, contents) => {
+		console.log(contents);
+		if (contents != 'pending') {
+			console.log('complete');
+			res.status(202).send();
+			return;
+		}
+	});
 });
 
 const port = process.env.PORT || 5000;
