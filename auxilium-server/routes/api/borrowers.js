@@ -57,6 +57,24 @@ router.post("/isRegistered", async (req, res) => {
   return res.json({ firstName: borrower.firstName });
 });
 
+router.post("/changeMaximumValue", async (req, res) => {
+  const { _id, maximumValue } = req.body;
+
+  const borrower = await Borrower.findOne({ id: _id });
+
+  if (!borrower) {
+    return res.sendStatus(500);
+  }
+
+  try {
+    await borrower.update({ maxAvailableCredit: maximumValue });
+    return res.status(200);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+});
+
 router.post("/authVerify", async (req, res) => {
   const { phoneNumber, securePin } = req.body;
 
