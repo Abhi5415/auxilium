@@ -42,12 +42,14 @@ router.post("/borrowerDeposit", (req, res) => {
   const { phoneNumber } = req;
 
   console.log("depositing.....");
+  return res.status(200);
 });
 
 router.post("/borrowerWithdrawal", (req, res) => {
   const { phoneNumber } = req;
 
   console.log("withdrawing...");
+  return res.status(200);
 });
 
 module.exports = router;
