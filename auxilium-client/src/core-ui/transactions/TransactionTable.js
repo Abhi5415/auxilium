@@ -3,46 +3,60 @@ import { Table } from "antd";
 
 const columns = [
   {
-    title: "Full Name",
-    dataIndex: "name"
+    title: "First Name",
+    dataIndex: "firstName"
   },
   {
-    title: "Age",
-    dataIndex: "age"
+    title: "Last Name",
+    dataIndex: "lastName"
   },
   {
-    title: "Address",
-    dataIndex: "address"
+    title: "Phone Number",
+    dataIndex: "phoneNumber"
+  },
+  {
+    title: "Maximum available credit",
+    dataIndex: "maxAvailableCredit"
+  },
+  {
+    title: "Action",
+    key: "action",
+    render: (text, record) => {
+      console.log(text, record);
+      return (
+        <span>
+          <a>View</a>
+        </span>
+      );
+    }
   }
 ];
 const data = [
   {
     key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park"
+    firstName: "John",
+    lastName: "Brown",
+    phoneNumber: "+16479634142",
+    maxAvailableCredit: "5"
   },
   {
     key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park"
+    firstName: "Jim",
+    lastName: "Green",
+    phoneNumber: "+18310837291",
+    maxAvailableCredit: "2"
   },
   {
     key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sidney No. 1 Lake Park"
+    firstName: "George",
+    lastName: "Black",
+    phoneNumber: "+12490839283",
+    maxAvailableCredit: "3"
   }
 ];
 
 export class TransactionTable extends React.Component {
   render() {
-    return (
-      <React.Fragment>
-        <h4>Small size table</h4>
-        <Table columns={columns} dataSource={data} size="small" />
-      </React.Fragment>
-    );
+    return <Table columns={columns} dataSource={data} size="small" />;
   }
 }

@@ -1,6 +1,7 @@
 import React from "react";
-import { TransactionTable } from "./core-ui/transactions/TransactionTable";
 import styled from "styled-components";
+import { Sidebar } from "./core-ui/sidebar/Sidebar";
+import { Borrowers } from "./core-ui/borrowers/Borrowers";
 
 const Container = styled.div`
   margin: 10px;
@@ -8,9 +9,10 @@ const Container = styled.div`
 
 export function App() {
   return (
-    <Container>
-      Hello
-      <TransactionTable />
-    </Container>
+    <Sidebar>
+      <Container>
+        <Borrowers />
+      </Container>
+    </Sidebar>
   );
 }
