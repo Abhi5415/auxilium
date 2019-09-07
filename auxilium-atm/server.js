@@ -8,26 +8,25 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/api/atm/deposit', (req, res) => {
-	setTimeout(() => {
-		shell.exec('python ir_sensor.py');
-	}, 5000);
+	console.log('hello');
+	shell.exec('python ir_sensor.py');
 
 	while (true) {
 		fs.readFile('./deposit.txt', 'utf8', (err, contents) => {
 			console.log(contents);
 			if (contents != 'pending') {
 				console.log('complete');
-                res.status(200).send(contents);
-                break;
+				res.status(200).send(contents);
+				return;
 			}
-        });
-        setTimeout(() => {}, 5000);
+		});
+		setTimeout(() => {}, 5000);
 	}
 });
 
 app.post('/api/atm/withdraw', (req, res) => {
 	shell.exec(`python ir_sensor.py ${req.body.amount}`);
-    res.status(202).send();
+	res.status(202).send();
 });
 
 const port = process.env.PORT || 5000;
