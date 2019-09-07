@@ -24,22 +24,25 @@ try:
         sensor_state = GPIO.input(irPIN)
 
         if sensor_state and not last_state:
-            secsInactive = 0
+            inactive = False
             print('connected')
 
-        if not sensor_state and last_state:
+        elif not sensor_state and last_state:
             coinsDeposited += 1
-            secsInactive = 0
+            inactive = False
             print('broken')
 
-        if not sensor_state and not last_state:
-            time.sleep(1)
-            secsInactive += 1
-            if secsInactive is SECS_TO_WAIT:
+        if not inactive:
+            timeStarted = time.time()
+
+        if sensor_state and last_state:
+            inactive = True
+            if timeStarted + SECS_TO_WAIT < time.time() and inactive:
                  break
 
         last_state = sensor_state
 
+    print(coinsDeposited)
     f = open("deposit.txt","w+")
     f.write(str(coinsDeposited))
 
