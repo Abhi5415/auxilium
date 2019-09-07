@@ -8,12 +8,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/api/atm/deposit', (req, res) => {
-	console.log('hello');
 	shell.exec('python ir_sensor.py');
 
 	while (true) {
 		fs.readFile('./deposit.txt', 'utf8', (err, contents) => {
-			console.log(contents);
 			if (contents != 'pending') {
 				console.log('complete');
 				res.status(200).send(contents);
@@ -25,16 +23,21 @@ app.get('/api/atm/deposit', (req, res) => {
 });
 
 app.post('/api/atm/withdraw', (req, res) => {
-	shell.exec(`python servo.py ${req.body.amount}`);
+	var rotations = req.body.amount;
 
-	fs.readFile('./withdraw.txt', 'utf8', (err, contents) => {
-		console.log(contents);
-		if (contents != 'pending') {
-			console.log('complete');
-			res.status(202).send();
-			return;
-		}
-	});
+	if (rotations) {
+		shell.exec(`python servo.py ${rotations}`);
+
+		fs.readFile('./withdraw.txt', 'utf8', (err, contents) => {
+			if (contents != 'pending') {
+				console.log('complete');
+				res.status(202).send();
+				return;
+			}
+		});
+	} else {
+		res.status(400).send();
+	}
 });
 
 const port = process.env.PORT || 5000;
