@@ -1,7 +1,11 @@
 const express = require("express");
+const axios = require("axios");
+
 const router = express.Router();
 
 const { Borrower } = require("../../models/Borrower");
+
+const { atmUrl } = require("../../config/serverUrls");
 
 router.get("/test", (_req, res) => res.json({ message: "Borrowers works" }));
 
@@ -61,10 +65,33 @@ router.post("/withdrawLimit", async (req, res) => {
   return res.json({ withdrawLimit: 5 });
 });
 
-router.post("/withdraw", (req, res) => {
+router.post("/withdraw", async (req, res) => {
   const { phoneNumber, withdrawAmount } = req.body;
+
+  const coinsWithdrew = await fetch(`${atmUrl}/withdraw`, {
+    method: "post",
+    body: JSON.stringify({
+      amount: 4
+    })
+  });
 
   return res.sendStatus(200);
 });
 
 module.exports = router;
+
+// axios.post(`${atmUrl}/withdraw`, {
+//   method: "post",
+//   timeout: 30000,
+//   body: JSON.stringify({
+//     amount: 4
+//   })
+// });
+
+// axios
+//   .get(`${atmUrl}/deposit`, {
+//     method: "get",
+//     timeout: 30000
+//   })
+//   .then(resp => console.log(resp))
+//   .catch(err => console.log(err));
