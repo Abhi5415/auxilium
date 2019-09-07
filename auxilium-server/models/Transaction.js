@@ -4,12 +4,7 @@ const Schema = mongoose.Schema;
 const TransactionSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: "users"
-  },
-  type: {
-    // SENT and RECEIVED
-    type: String,
-    required: true
+    ref: "borrowers"
   },
   amount: {
     type: Number,
@@ -19,15 +14,7 @@ const TransactionSchema = new Schema({
     type: String,
     required: true
   },
-  initiatedId: {
-    type: Schema.Types.ObjectId,
-    ref: "users"
-  },
-  destinationId: {
-    type: Schema.Types.ObjectId,
-    ref: "users"
-  },
-  dateCreated: {
+  date: {
     type: Date,
     default: Date.now()
   }

@@ -10,20 +10,4 @@ router.get("/", async (_req, res) => {
   res.json(transactions);
 });
 
-router.post("/getOutgoingTransactionsForUser", (req, res) => {
-  const { userId } = req;
-
-  Transaction.find({
-    initiatedId: userId
-  }).then(transactions => res.json(transactions));
-});
-
-router.post("/getIncomingTransactionsForUser", (req, res) => {
-  const { userId } = req;
-
-  Transaction.find({
-    destinationId: userId
-  }).then(transactions => res.json(transactions));
-});
-
 module.exports = router;
