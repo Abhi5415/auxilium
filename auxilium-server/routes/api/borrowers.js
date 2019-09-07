@@ -58,7 +58,7 @@ router.post("/withdrawLimit", async (req, res) => {
   // const widthdrawLimit =
   //   borrower.maxAvailableCredit - creditForUserTransactions;
 
-  return res.json({ widthdrawLimit: 5 });
+  return res.json({ withdrawLimit: 5 });
 });
 
 router.post("/withdraw", (req, res) => {
