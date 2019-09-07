@@ -20,12 +20,12 @@ app.get('/api/atm/deposit', (req, res) => {
 				return;
 			}
 		});
-		setTimeout(() => {}, 5000);
+		setTimeout(() => { }, 5000);
 	}
 });
 
 app.post('/api/atm/withdraw', (req, res) => {
-	shell.exec(`python ir_sensor.py ${req.body.amount}`);
+	shell.exec(`python servo.py ${req.body.amount}`);
 
 	fs.readFile('./withdraw.txt', 'utf8', (err, contents) => {
 		console.log(contents);
