@@ -7,15 +7,15 @@ const publicKey = 'GAI6C5X6QK5KE3OXXIQAUZ33WCMCENCJ5VDYRKNZCR6LCYRM5PSQGFOG';
 const secretString = 'SALEHVAPOGW677KLEDFNQZ3WA7JSQCN2UJ37CUXHZOXIKHPEOOV264L7';
 
 // let transactionExample = {
-// 	u: '41614',
-// 	a: -1234,
+//   u: "41614",
+//   a: -1234
 // };
 
 exports.submitTransaction = async payload => {
 	try {
 		const account = await server.loadAccount(publicKey);
 		const fee = await server.fetchBaseFee();
-		const memo = new StellarSdk.Memo.text(payload);
+		const memo = new StellarSdk.Memo.text(JSON.stringify(payload));
 
 		const transaction = new StellarSdk.TransactionBuilder(account, {
 			fee,
@@ -44,32 +44,26 @@ exports.submitTransaction = async payload => {
 exports.getTransactions = async () => {
 	let history = [];
 
-	try {
-		r = await server
-			.transactions()
-			.limit(1)
-			.forAccount(publicKey)
-			.call();
-		while (r.records.length != 0) {
-			let record = r.records[0];
-			console.log(record);
+	r = await server
+		.transactions()
+		.limit(1)
+		.forAccount(publicKey)
+		.call();
+	while (r.records.length != 0) {
+		let record = r.records[0];
 
-			if (
-				record.hasOwnProperty('memo') &&
-				validate(record, { type: 'object' }).errors.length == 0
-			) {
-				let parsedRecord = JSON.parse(record.memo);
-				parsedRecord.r = record._links.self.href;
-				parsedRecord.d = record.created_at;
-				history.push(parsedRecord);
-			}
-
-			r = await r.next();
+		if (
+			record.hasOwnProperty('memo') &&
+			validate(record, { type: 'object' }).errors.length == 0
+		) {
+			let parsedRecord = JSON.parse(record.memo);
+			parsedRecord.r = record._links.self.href;
+			history.push(parsedRecord);
 		}
-		console.log(history);
-	} catch (e) {
-		console.log(e);
+
+		r = await r.next();
 	}
+	return history;
 };
 
 exports.getTransactions();
