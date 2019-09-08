@@ -53,6 +53,17 @@ export class NetTransactionSummary extends React.Component {
         );
       }
     },
+    // {
+    //   title: "Blockchain Receipt",
+    //   dataIndex: "blockChainUrl",
+    //   render: blockChainUrl => {
+    //     return (
+    //       <span>
+    //         <a href={blockChainUrl}>Stellar Transaction Receipt</a>
+    //       </span>
+    //     );
+    //   }
+    // },
     {
       title: "Date",
       dataIndex: "date",

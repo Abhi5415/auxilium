@@ -5,6 +5,7 @@ import { Button, Typography } from "antd";
 import { TransactionTable } from "../transactions/TransactionTable";
 import { AddUserModal } from "../modals/AddUserModal";
 import ImageUpload from "../../stores/ImageUpload";
+import { MatchedFaceModal } from "../modals/MatchedFaceModal";
 
 const { Title } = Typography;
 
@@ -20,6 +21,7 @@ const ButtonContainer = styled(Button)`
 export class Borrowers extends React.Component {
   state = {
     visible: false,
+    matchModalUrl: undefined,
     data: []
   };
 
@@ -54,13 +56,24 @@ export class Borrowers extends React.Component {
 
       values.imageURI = ImageUpload.imageName;
 
-      await fetch("http://localhost:5000/borrowers/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(values)
-      });
+      try {
+        const response = await (await fetch(
+          "http://localhost:5000/borrowers/register",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(values)
+          }
+        )).json();
+
+        this.setState({
+          matchingFaceURL: response.matchingFaceURL
+        });
+      } catch (err) {
+        throw new Error(err);
+      }
 
       this.fetchAll();
 
@@ -74,8 +87,17 @@ export class Borrowers extends React.Component {
   };
 
   render() {
+    const { matchingFaceURL } = this.state;
+
     return (
       <React.Fragment>
+        {matchingFaceURL && (
+          <MatchedFaceModal
+            url={matchingFaceURL}
+            onOk={() => this.setState({ matchingFaceURL: undefined })}
+            onCancel={() => this.setState({ matchingFaceURL: undefined })}
+          />
+        )}
         <HeaderContainer>
           <Title level={2}>Borrowers</Title>
           <ButtonContainer

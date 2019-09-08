@@ -47,6 +47,8 @@ export class Dashboard extends React.Component {
       }
     )).json();
 
+    console.log(transactions);
+
     transactions = transactions.map(transaction => {
       transaction.monthlyDate = moment(transaction.date).format("YYYY-MM-DD");
       return transaction;
@@ -80,12 +82,14 @@ export class Dashboard extends React.Component {
       transactionAvg += dailyTransactionCountMap[key];
     });
 
+    console.log(visitData);
+
     transactionAvg /= Object.keys(dailyTransactionCountMap).length;
 
     this.setState({
       visitData,
       dailyVolume: visitData[0].y,
-      yesterdayPrediction: 100 * (visitData[0].y / visitData[1].y),
+      yesterdayPrediction: Math.round(100 * (visitData[0].y / visitData[1].y)),
       dailyTransactionCount:
         dailyTransactionCountMap[moment().format("YYYY-MM-DD")],
       transactionAvg

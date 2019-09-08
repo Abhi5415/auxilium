@@ -17,7 +17,7 @@ export const Sidebar = observer(
   class Sidebar extends React.Component {
     state = {
       collapsed: false,
-      chosenIndex: 0
+      chosenIndex: 1
     };
 
     onCollapse = collapsed => {
@@ -34,7 +34,7 @@ export const Sidebar = observer(
             onCollapse={this.onCollapse}
           >
             <div className="logo" />
-            <Menu theme="dark" defaultSelectedKeys={["0"]} mode="inline">
+            <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
               <Menu.Item
                 key="0"
                 onClick={() => this.setState({ chosenIndex: 0 })}
