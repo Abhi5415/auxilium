@@ -3,8 +3,8 @@ StellarSdk.Network.useTestNetwork();
 const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
 const validate = require('jsonschema').validate;
 
-const publicKey = 'GAI6C5X6QK5KE3OXXIQAUZ33WCMCENCJ5VDYRKNZCR6LCYRM5PSQGFOG';
-const secretString = 'SALEHVAPOGW677KLEDFNQZ3WA7JSQCN2UJ37CUXHZOXIKHPEOOV264L7';
+const publicKey = 'GDKJGSXSU4PKWAOY7I555W57DNN2M4Q7QV3JOAIXPTZQHRCHPPU3JFUO';
+const secretString = 'SDWXBT5VNOQ2M76QZQKJ7FC7IKGCW7VVRQPT7KFQNAVRVGZGA5TM3PSJ';
 
 // let transactionExample = {
 //   u: "41614",
