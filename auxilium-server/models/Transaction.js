@@ -7,7 +7,7 @@ const TransactionSchema = new Schema({
     ref: "borrowers"
   },
   amount: {
-    type: Number,
+    type: String,
     required: true
   },
   atmId: {

@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"nodemon server\" \"npm run tunnel\"",
-    "tunnel": "ssh -R intus.serveo.net:80:localhost:5000 serveo.net"
+    "start": "nodemon server",
+    "tunnel": "ssh -R aux-server.serveo.net:80:localhost:5000 serveo.net"
   },
   "author": "",
   "license": "ISC",

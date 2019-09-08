@@ -78,7 +78,6 @@ router.post("/changeMaximumValue", async (req, res) => {
     );
     return res.sendStatus(200);
   } catch (err) {
-    console.log(err);
     return res.status(500).json(err);
   }
 });
@@ -101,27 +100,34 @@ router.post("/authVerify", async (req, res) => {
   return res.sendStatus(200);
 });
 
+router.post("/depositWait", async (req, res) => {
+  axios.get(`${atmUrl}/deposit`, {
+    method: "get"
+  });
+  return res.sendStatus(200);
+});
+
 router.post("/deposit", async (req, res) => {
   const { phoneNumber } = req.body;
 
   const borrower = await Borrower.findOne({ phoneNumber });
 
-  const coinsDeposited = 2;
+  let coinsDeposited = { data: { count: 0 } };
 
-  // todo await axios.get(`${atmUrl}/deposit`, {
-  //   method: "get",
-  //   timeout: 45000
-  // });
+  coinsDeposited = await axios.get(`${atmUrl}/depositPersisted`);
 
   await new Transaction({
     user: borrower._id,
-    amount: coinsDeposited,
+    amount: parseInt(coinsDeposited.data.count),
     atmId: 381
   }).save();
 
-  await submitTransaction({ u: borrower.stellarId, a: coinsDeposited });
+  await submitTransaction({
+    u: borrower.stellarId,
+    a: coinsDeposited.data.count
+  });
 
-  return res.json({ coinsDeposited });
+  return res.json({ coinsDeposited: coinsDeposited.data.count });
 });
 
 router.post("/withdrawLimit", async (req, res) => {
@@ -144,15 +150,8 @@ router.post("/withdraw", async (req, res) => {
 
   const borrower = await Borrower.findOne({ phoneNumber });
 
-  await axios.post(`${atmUrl}/withdraw`, {
-    method: "post",
-    timeout: 45000,
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      amount: withdrawAmount
-    })
+  axios.post(`${atmUrl}/withdraw`, {
+    amount: parseInt(withdrawAmount)
   });
 
   await new Transaction({
@@ -163,7 +162,7 @@ router.post("/withdraw", async (req, res) => {
 
   await submitTransaction({ u: borrower.stellarId, a: -1 * withdrawAmount });
 
-  return res.sendStatus(200);
+  return res.json({ amount: withdrawAmount });
 });
 
 // router.post("/getTransactions", async (req, res) => {
@@ -179,7 +178,7 @@ router.post("/withdraw", async (req, res) => {
 
 router.post("/getTransactions", async (req, res) => {
   const stellarTransactions = await getTransactions();
-  console.log(stellarTransactions);
+
   const userTransactions = [];
 
   stellarTransactions.forEach(async transaction => {
@@ -195,7 +194,6 @@ router.post("/getTransactions", async (req, res) => {
     userTransactions.push(temp);
   });
 
-  console.log(userTransactions);
   return res.json(userTransactions);
 });
 
