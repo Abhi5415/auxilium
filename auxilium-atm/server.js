@@ -8,23 +8,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/api/atm/deposit', (req, res) => {
-	// shell.exec('python ir_sensor.py');
-	res.status(200).send({
-		count: 10
-	})
-	// while (true) {
-	// 	fs.readFile('./deposit.txt', 'utf8', (err, contents) => {
-	// 		console.log("reading file")
-	// 		if (contents != 'pending') {
-	// 			console.log('complete');
-	// 			res.status(200).send({
-	// 				count: parseInt(contents)
-	// 			});
-	// 		}
-	// 	});
-	// 	fs.close()
-	// 	setTimeout(() => { }, 5000);
-	// }
+	const spawn = require("child_process").spawn;
+	const pythonProcess = spawn('python', ["ir_sensor.py"]);
+
+	pythonProcess.stdout.on('data', (data) => {
+		console.log(data);
+		// if (data == "pending") {
+		// 	res.status(400).send()
+		// } else {
+		// 	res.status.
+		// }
+	});
 });
 
 app.post('/api/atm/withdraw', (req, res) => {
