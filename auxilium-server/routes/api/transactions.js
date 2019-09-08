@@ -41,7 +41,6 @@ router.get("/allStellar", async (_req, res) => {
 
   await new Promise((resolve, reject) => setTimeout(() => resolve(), 500));
 
-  console.log(userTransactions);
   userTransactions[userTransactions.length - 1].date =
     "2019-09-07T04:05:37.456Z";
   return res.json(userTransactions);
