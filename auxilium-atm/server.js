@@ -28,7 +28,7 @@ app.get('/api/atm/deposit', (req, res) => {
 app.post('/api/atm/withdraw', (req, res) => {
 	var rotations = req.body.amount;
 
-	if (rotations) {
+	if (rotations > 0) {
 		shell.exec(`python servo.py ${rotations}`);
 		while (true) {
 			fs.readFile('./withdraw.txt', 'utf8', (err, contents) => {

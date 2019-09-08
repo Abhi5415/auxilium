@@ -14,6 +14,7 @@ coinsDeposited = 0
 timeStarted = time.time()
 SECS_TO_WAIT = 5
 secsInactive = 0
+inactive = False
 
 try:
     f = open("deposit.txt", "w+")
@@ -38,7 +39,7 @@ try:
         if sensor_state and last_state:
             inactive = True
             if timeStarted + SECS_TO_WAIT < time.time() and inactive:
-                 break
+                break
 
         last_state = sensor_state
 
