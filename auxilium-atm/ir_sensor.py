@@ -17,21 +17,18 @@ secsInactive = 0
 inactive = False
 
 try:
-    f = open("deposit.txt", "w+")
-    f.write("pending")
-    f.close()
-
+    print("pending")
     while True:
         sensor_state = GPIO.input(irPIN)
 
         if sensor_state and not last_state:
             inactive = False
-            print('connected')
+            # print('connected')
 
         elif not sensor_state and last_state:
             coinsDeposited += 1
             inactive = False
-            print('broken')
+            # print('broken')
 
         if not inactive:
             timeStarted = time.time()
@@ -43,9 +40,7 @@ try:
 
         last_state = sensor_state
 
-    print(coinsDeposited)
-    f = open("deposit.txt","w+")
-    f.write(str(coinsDeposited))
-
+    print(coinsDeposited)    
 finally:
+    sys.stdout.flush()
     GPIO.cleanup()
