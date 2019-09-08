@@ -12,7 +12,7 @@ router.get("/", async (_req, res) => {
 
 router.get("/all", async (_req, res) => {
   try {
-    const transactions = await Transaction.find();
+    const transactions = await Transaction.find().sort({ date: -1 });
     return res.json(transactions);
   } catch (e) {
     return res.sendStatus(500);
