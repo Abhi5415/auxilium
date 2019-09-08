@@ -11,6 +11,8 @@ const {
   submitTransaction
 } = require("../../controllers/stellar");
 
+const { isExistingUser } = require("../../controllers/facial");
+
 router.get("/test", (_req, res) => res.json({ message: "Borrowers works" }));
 
 router.get("/", async (_req, res) => {
@@ -26,6 +28,12 @@ router.post("/register", async (req, res) => {
   });
 
   try {
+    const isValid = await isExistingUser(req.body.imageURI);
+
+    if (isValid.exists) {
+      return res.status(403).json({ matchingFaceURL: isValid.matchingFace });
+    }
+
     const result = await borrower.save();
     return res.json(result);
   } catch (e) {
@@ -96,13 +104,22 @@ router.post("/authVerify", async (req, res) => {
 router.post("/deposit", async (req, res) => {
   const { phoneNumber } = req.body;
 
-  const coinsDeposited = await axios
-    .get(`${atmUrl}/deposit`, {
-      method: "get",
-      timeout: 45000
-    })
-    .then(resp => console.log(resp))
-    .catch(err => console.log(err));
+  const borrower = await Borrower.findOne({ phoneNumber });
+
+  const coinsDeposited = 2;
+
+  // todo await axios.get(`${atmUrl}/deposit`, {
+  //   method: "get",
+  //   timeout: 45000
+  // });
+
+  await new Transaction({
+    user: borrower._id,
+    amount: coinsDeposited,
+    atmId: 381
+  }).save();
+
+  await submitTransaction({ u: borrower.stellarId, a: coinsDeposited });
 
   return res.json({ coinsDeposited });
 });
@@ -125,6 +142,8 @@ router.post("/withdrawLimit", async (req, res) => {
 router.post("/withdraw", async (req, res) => {
   const { phoneNumber, withdrawAmount } = req.body;
 
+  const borrower = await Borrower.findOne({ phoneNumber });
+
   await axios.post(`${atmUrl}/withdraw`, {
     method: "post",
     timeout: 45000,
@@ -136,25 +155,32 @@ router.post("/withdraw", async (req, res) => {
     })
   });
 
+  await new Transaction({
+    user: borrower._id,
+    amount: -1 * withdrawAmount,
+    atmId: 381
+  }).save();
+
+  await submitTransaction({ u: borrower.stellarId, a: -1 * withdrawAmount });
+
   return res.sendStatus(200);
 });
 
+// router.post("/getTransactions", async (req, res) => {
+//   const { _id } = req.body;
+
+//   try {
+//     const transactions = await Transaction.find({ user: _id });
+//     return res.json(transactions);
+//   } catch (e) {
+//     return res.sendStatus(500);
+//   }
+// });
+
 router.post("/getTransactions", async (req, res) => {
-  const { _id } = req.body;
-
-  try {
-    const transactions = await Transaction.find({ user: _id });
-    return res.json(transactions);
-  } catch (e) {
-    return res.sendStatus(500);
-  }
-});
-
-router.post("/stellarReturn", async (req, res) => {
   const stellarTransactions = await getTransactions();
-  const userObjects = [];
-
   console.log(stellarTransactions);
+  const userTransactions = [];
 
   stellarTransactions.forEach(async transaction => {
     const stellarId = transaction.u;
@@ -163,7 +189,14 @@ router.post("/stellarReturn", async (req, res) => {
     if (!borrower) {
       return;
     }
+
+    const temp = borrower;
+    temp.blockChainUrl = transaction.r;
+    userTransactions.push(temp);
   });
+
+  console.log(userTransactions);
+  return res.json(userTransactions);
 });
 
 module.exports = router;
