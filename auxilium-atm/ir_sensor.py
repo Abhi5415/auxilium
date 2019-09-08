@@ -26,12 +26,12 @@ try:
 
         if sensor_state and not last_state:
             inactive = False
-            print('connected')
+            # print('connected')
 
         elif not sensor_state and last_state:
             coinsDeposited += 1
             inactive = False
-            print('broken')
+            # print('broken')
 
         if not inactive:
             timeStarted = time.time()
@@ -43,7 +43,7 @@ try:
 
         last_state = sensor_state
 
-    print(coinsDeposited)
+    # print(coinsDeposited)
     f = open("deposit.txt","w+")
     f.write(str(coinsDeposited))
 

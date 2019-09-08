@@ -12,6 +12,7 @@ app.get('/api/atm/deposit', (req, res) => {
 
 	while (true) {
 		fs.readFile('./deposit.txt', 'utf8', (err, contents) => {
+			console.log("reading file")
 			if (contents != 'pending') {
 				console.log('complete');
 				res.status(200).send({
@@ -32,6 +33,7 @@ app.post('/api/atm/withdraw', (req, res) => {
 		shell.exec(`python servo.py ${rotations}`);
 		while (true) {
 			fs.readFile('./withdraw.txt', 'utf8', (err, contents) => {
+				console.log("reading file")
 				if (contents != 'pending') {
 					console.log('complete');
 					res.status(202).send();
