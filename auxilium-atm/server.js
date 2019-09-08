@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-
+const fs = requir
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -21,6 +21,14 @@ app.get('/api/atm/deposit', (req, res) => {
 		}
 	});
 });
+
+app.get('api/atm/depositPersisted'), (req, res) => {
+	fs.readFile('./deposit.txt', 'utf8', (err, data) => {
+		res.status(200).send({
+			count: parseInt(data)
+		})
+	});
+}
 
 app.post('/api/atm/withdraw', (req, res) => {
 	var rotations = req.body.amount;
