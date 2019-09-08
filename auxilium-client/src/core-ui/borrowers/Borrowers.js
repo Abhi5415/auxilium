@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Button, Typography } from "antd";
 import { TransactionTable } from "../transactions/TransactionTable";
 import { AddUserModal } from "../modals/AddUserModal";
+import ImageUpload from "../../stores/ImageUpload";
 
 const { Title } = Typography;
 
@@ -50,6 +51,8 @@ export class Borrowers extends React.Component {
       if (err) {
         return;
       }
+
+      values.imageURI = ImageUpload.imageName;
 
       await fetch("http://localhost:5000/borrowers/register", {
         method: "POST",

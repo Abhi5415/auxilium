@@ -1,6 +1,45 @@
 import React from "react";
 import styled from "styled-components";
 import { Modal, Form, Input, Upload, Icon, message } from "antd";
+import AWS from "aws-sdk";
+import ImageUpload from "../../stores/ImageUpload";
+
+const props = {
+  customRequest({ file, onError, onProgress, onSuccess }) {
+    AWS.config.update({
+      accessKeyId: "AKIAIUTIQDVE42E737XQ",
+      secretAccessKey: "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"
+    });
+
+    const S3 = new AWS.S3();
+
+    const objParams = {
+      Bucket: "facial-data",
+      Key: file.name,
+      Body: file,
+      ContentType: file.type,
+      ACL: "public-read-write"
+    };
+
+    S3.putObject(objParams)
+      .on("httpUploadProgress", function({ loaded, total }) {
+        onProgress(
+          {
+            percent: Math.round((loaded / total) * 100)
+          },
+          file
+        );
+      })
+      .send(function(err, data) {
+        if (err) {
+          onError();
+        } else {
+          ImageUpload.imageName = file.name;
+          onSuccess(data.response, file);
+        }
+      });
+  }
+};
 
 const { Dragger } = Upload;
 
@@ -77,23 +116,7 @@ export const AddUserModal = Form.create({ name: "form_in_modal" })(
             </PinContainer>
             <Form.Item label="Headshot">
               {getFieldDecorator("imageURI")(
-                <Dragger
-                  name="file"
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  onChange={info => {
-                    const { status } = info.file;
-                    if (status !== "uploading") {
-                      console.log(info.file, info.fileList);
-                    }
-                    if (status === "done") {
-                      message.success(
-                        `${info.file.name} file uploaded successfully.`
-                      );
-                    } else if (status === "error") {
-                      message.error(`${info.file.name} file upload failed.`);
-                    }
-                  }}
-                >
+                <Dragger name="file" {...props}>
                   <p className="ant-upload-drag-icon">
                     <Icon type="inbox" />
                   </p>
