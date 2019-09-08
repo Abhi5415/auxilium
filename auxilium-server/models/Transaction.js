@@ -14,6 +14,10 @@ const TransactionSchema = new Schema({
     type: String,
     required: true
   },
+  stellarId: {
+    type: Number,
+    required: true
+  },
   date: {
     type: Date,
     default: Date.now()

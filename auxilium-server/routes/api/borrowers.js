@@ -115,15 +115,18 @@ router.post("/deposit", async (req, res) => {
   let coinsDeposited = { data: { count: 0 } };
 
   coinsDeposited = await axios.get(`${atmUrl}/depositPersisted`);
+  const stellarId = await Transaction.find().count();
 
   await new Transaction({
     user: borrower._id,
     amount: parseInt(coinsDeposited.data.count),
+    stellarId,
     atmId: 381
   }).save();
 
   await submitTransaction({
     u: borrower.stellarId,
+    t: stellarId,
     a: coinsDeposited.data.count
   });
 
@@ -154,67 +157,30 @@ router.post("/withdraw", async (req, res) => {
     amount: parseInt(withdrawAmount)
   });
 
+  const stellarId = await Transaction.find().count();
+
   await new Transaction({
     user: borrower._id,
     amount: -1 * withdrawAmount,
+    stellarId,
     atmId: 381
   }).save();
 
-  await submitTransaction({ u: borrower.stellarId, a: -1 * withdrawAmount });
+  await submitTransaction({
+    u: borrower.stellarId,
+    t: stellarId,
+    a: -1 * withdrawAmount
+  });
 
   return res.json({ amount: withdrawAmount });
 });
 
-// router.post("/getTransactions", async (req, res) => {
-//   const { _id } = req.body;
-
-//   try {
-//     const transactions = await Transaction.find({ user: _id });
-//     return res.json(transactions);
-//   } catch (e) {
-//     return res.sendStatus(500);
-//   }
-// });
-
 router.post("/getTransactions", async (req, res) => {
-  const stellarTransactions = await getTransactions();
+  const { _id } = req.body;
 
-  const userTransactions = [];
+  const transactions = await Transaction.find({ user: _id });
 
-  stellarTransactions.forEach(async transaction => {
-    const stellarId = transaction.u;
-
-    const borrower = await Borrower.findOne({ stellarId });
-    if (!borrower) {
-      return;
-    }
-
-    const temp = borrower;
-    temp.blockChainUrl = transaction.r;
-    userTransactions.push(temp);
-  });
-
-  return res.json(userTransactions);
+  return res.json(transactions);
 });
 
 module.exports = router;
-
-// (async function() {
-//   let shehryar;
-//   try {
-//     shehryar = await Borrower.findOne({ firstName: "Shehryar" });
-//   } catch (e) {
-//     console.log(e);
-//   }
-//   for (let i = 0; i < 9; i++) {
-//     const ttt = new Transaction({
-//       user: shehryar._id + "",
-//       amount: Math.floor(Math.random() * 11),
-//       atmId: Math.floor(Math.random() * 1000)
-//     });
-//     ttt
-//       .save()
-//       .then(a => console.log(a))
-//       .catch(e => console.log(e));
-//   }
-// })();
