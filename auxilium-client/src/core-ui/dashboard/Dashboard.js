@@ -37,6 +37,10 @@ export class Dashboard extends React.Component {
 
   componentDidMount() {
     this.fetchData();
+
+    setInterval(() => {
+      this.fetchData();
+    }, 10000);
   }
 
   async fetchData() {
@@ -47,8 +51,6 @@ export class Dashboard extends React.Component {
       }
     )).json();
 
-    console.log(transactions);
-
     transactions = transactions.map(transaction => {
       transaction.monthlyDate = moment(transaction.date).format("YYYY-MM-DD");
       return transaction;
@@ -58,12 +60,14 @@ export class Dashboard extends React.Component {
     var dailyTransactionCountMap = {};
 
     transactions.forEach(transaction => {
-      if (dateMoneyMap[transaction.monthlyDate]) {
-        dateMoneyMap[transaction.monthlyDate] += Math.abs(transaction.amount);
-        dailyTransactionCountMap[transaction.monthlyDate]++;
-      } else {
-        dateMoneyMap[transaction.monthlyDate] = Math.abs(transaction.amount);
-        dailyTransactionCountMap[transaction.monthlyDate] = 1;
+      if (transaction.amount) {
+        if (dateMoneyMap[transaction.monthlyDate]) {
+          dateMoneyMap[transaction.monthlyDate] += Math.abs(transaction.amount);
+          dailyTransactionCountMap[transaction.monthlyDate]++;
+        } else {
+          dateMoneyMap[transaction.monthlyDate] = Math.abs(transaction.amount);
+          dailyTransactionCountMap[transaction.monthlyDate] = 1;
+        }
       }
     });
 
@@ -81,8 +85,6 @@ export class Dashboard extends React.Component {
     Object.keys(dailyTransactionCountMap).forEach(key => {
       transactionAvg += dailyTransactionCountMap[key];
     });
-
-    console.log(visitData);
 
     transactionAvg /= Object.keys(dailyTransactionCountMap).length;
 

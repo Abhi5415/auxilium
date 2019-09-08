@@ -50,7 +50,6 @@ export class TransactionTable extends React.Component {
 
   componentWillReceiveProps(oldProps, newProps) {
     this.props.data.forEach(row => {
-      console.log(row);
       if (row._id == DeepLink.idChosen) {
         this.setState({
           data: row

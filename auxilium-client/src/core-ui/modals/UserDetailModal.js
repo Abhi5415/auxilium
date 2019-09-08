@@ -43,7 +43,10 @@ export class UserDetailModal extends React.Component {
         })
       }
     )).json();
-    let balance = transactions.reduce((prev, curr) => prev + curr.amount, 0);
+    let balance = transactions.reduce(
+      (prev, curr) => prev + parseInt(curr.amount),
+      0
+    );
     this.setState({
       transactions,
       balance
