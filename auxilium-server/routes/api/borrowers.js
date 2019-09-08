@@ -4,6 +4,7 @@ const axios = require("axios");
 const router = express.Router();
 
 const { Borrower } = require("../../models/Borrower");
+const { Transaction } = require("../../models/Transaction");
 const { atmUrl } = require("../../config/serverUrls");
 const {
   getTransactions,
@@ -58,17 +59,20 @@ router.post("/isRegistered", async (req, res) => {
 });
 
 router.post("/changeMaximumValue", async (req, res) => {
-  const { _id, maximumValue } = req.body;
+  const { stellarId, maximumValue } = req.body;
 
-  const borrower = await Borrower.findOne({ id: _id });
+  const borrower = await Borrower.findOne({ stellarId });
 
   if (!borrower) {
     return res.sendStatus(500);
   }
 
   try {
-    await borrower.update({ maxAvailableCredit: maximumValue });
-    return res.status(200);
+    await Borrower.update(
+      { stellarId },
+      { $set: { maxAvailableCredit: maximumValue } }
+    );
+    return res.sendStatus(200);
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
@@ -139,6 +143,17 @@ router.post("/withdraw", async (req, res) => {
   return res.sendStatus(200);
 });
 
+router.post("/getTransactions", async (req, res) => {
+  const { _id } = req.body;
+
+  try {
+    const transactions = await Transaction.find({ user: _id });
+    return res.json(transactions);
+  } catch (e) {
+    return res.sendStatus(500);
+  }
+});
+
 router.post("/stellarReturn", async (req, res) => {
   const stellarTransactions = await getTransactions();
   const userObjects = [];
@@ -156,3 +171,23 @@ router.post("/stellarReturn", async (req, res) => {
 });
 
 module.exports = router;
+
+// (async function() {
+//   let shehryar;
+//   try {
+//     shehryar = await Borrower.findOne({ firstName: "Shehryar" });
+//   } catch (e) {
+//     console.log(e);
+//   }
+//   for (let i = 0; i < 9; i++) {
+//     const ttt = new Transaction({
+//       user: shehryar._id + "",
+//       amount: Math.floor(Math.random() * 11),
+//       atmId: Math.floor(Math.random() * 1000)
+//     });
+//     ttt
+//       .save()
+//       .then(a => console.log(a))
+//       .catch(e => console.log(e));
+//   }
+// })();
