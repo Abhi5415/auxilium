@@ -14,10 +14,13 @@ app.get('/api/atm/deposit', (req, res) => {
 		fs.readFile('./deposit.txt', 'utf8', (err, contents) => {
 			if (contents != 'pending') {
 				console.log('complete');
-				res.status(200).send(contents);
+				res.status(200).send({
+					count: parseInt(contents)
+				});
 				return;
 			}
 		});
+		fs.close()
 		setTimeout(() => { }, 5000);
 	}
 });
@@ -25,16 +28,19 @@ app.get('/api/atm/deposit', (req, res) => {
 app.post('/api/atm/withdraw', (req, res) => {
 	var rotations = req.body.amount;
 
-	if (rotations) {
+	if (rotations > 0) {
 		shell.exec(`python servo.py ${rotations}`);
-
-		fs.readFile('./withdraw.txt', 'utf8', (err, contents) => {
-			if (contents != 'pending') {
-				console.log('complete');
-				res.status(202).send();
-				return;
-			}
-		});
+		while (true) {
+			fs.readFile('./withdraw.txt', 'utf8', (err, contents) => {
+				if (contents != 'pending') {
+					console.log('complete');
+					res.status(202).send();
+					return;
+				}
+			});
+			fs.close();
+			setTimeout(() => { }, 5000);
+		}
 	} else {
 		res.status(400).send();
 	}
