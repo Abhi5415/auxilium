@@ -12,12 +12,15 @@ app.get('/api/atm/deposit', (req, res) => {
 	const pythonProcess = spawn('python', ["ir_sensor.py"]);
 
 	pythonProcess.stdout.on('data', (data) => {
-		console.log(data);
-		// if (data == "pending") {
-		// 	res.status(400).send()
-		// } else {
-		// 	res.status.
-		// }
+		var prints = data.toString('utf8');
+		prints = prints.split('\n');
+		if (prints.length == 1) {
+			res.status(500)
+		} else if (prints.length == 2) {
+			res.status(200).send({
+				count: prints[2]
+			})
+		}
 	});
 });
 
