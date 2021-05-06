@@ -20,7 +20,7 @@
     "concurrently": "^4.1.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "jpv": "^2.0.1",
+    "jpv": "^2.2.2",
     "jsonschema": "^1.2.4",
     "mongoose": "^5.6.13",
     "stellar-sdk": "^3.0.0",
